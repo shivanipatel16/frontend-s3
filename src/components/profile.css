@@ -1,0 +1,59 @@
+.formContainer {
+    border-radius: 16px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    max-width: 85vw;
+    margin: auto;
+    margin-top: 3em;
+  }
+  
+  .cancelButton {
+    flex: 1;
+    height: 100%;
+    color: #9c9c9c;
+    border-radius: 32px;
+    background-color: white;
+    font-weight: 600;
+    font-size: 18px;
+    transition: 0.3s;
+    cursor: pointer;
+  }
+  
+  .cancelButton:hover {
+    background-color: rgb(179, 179, 179);
+    color: white;
+  }
+  
+  .buttonContainer {
+    height: 36px;
+    margin-top: 36px;
+    display: flex;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .detailsWrapper {
+    margin-top: 24px;
+  }
+  
+  .detail {
+    margin-bottom: 20px;
+  }
+  
+  .detailTitle {
+    color: #7d7d7d;
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+  
+  .detailValue {
+    font-size: 14px;
+    word-wrap: break-word;
+  }
+
+  .button span {
+    font-size: 18px;
+    color: #9c9c9c;
+  }
