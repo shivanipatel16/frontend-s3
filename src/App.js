@@ -10,7 +10,7 @@ import { BrowserRouter as Router,
          useNavigate } from "react-router-dom";
 import Footer from './components/footer';
 import Header from './components/header';
-import { Container } from 'react-bootstrap'
+import { Container } from 'react-bootstrap';
 import { CookiesProvider } from 'react-cookie';
 import Profile from "./components/profile";
 

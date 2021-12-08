@@ -3,6 +3,8 @@ import { Form, Button } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer';
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Cookies } from 'react-cookie';
+import axios from "axios";
+
 
 let autocomplete;
 let address1Field;
@@ -93,11 +95,11 @@ function fillInAddress() {
   address2Field.focus();
 }
 
-const SignUp = () => {
+const SignUp = ({ isNew }) => {
   const cookie = new Cookies();
   let navigator = useNavigate();
   const location = useLocation();
-
+  const email = cookie.get("email");
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({ ...state, ...newState }),
     {
@@ -125,60 +127,55 @@ const SignUp = () => {
     let addressInfo = {"street_line1": address1,
                       "street_line2": address2,
                       "city": city,
+                      "State": state,
                       "country": country,
-                      "zipcode": zipcode}
+                      "zipcode": zipcode};
+
     let userInfo = {"first_name": firstName,
                     "last_name": lastName,
-                    "email": cookie.get("email"),
+                    "email": email,
                     "phone_number": phone,
-                    "address": addressInfo}
+                    "address": addressInfo};
     
     console.log(userInfo);
     console.log("Above is info");
 
     try {
-      let userResponse, addressResponse;
-      // If it's edit info
+      let userResponse, addressResponse, userData;
+      // Info update
       if (location.state) {
+        console.log("update");
+        userData = {"first_name": firstName,
+                      "last_name": lastName,
+                      "phone_number": phone};
+
         userResponse = await axios.put(
-          `http://ec2-18-222-102-49.us-east-2.compute.amazonaws.com:5000/api/login/users?email=${email}`,
+          `http://18.222.24.97:5000/api/login/users?email=${email}`,
           userData
+        );
+        let addressId = cookie.get("user")["address_id"];
+        addressResponse = await axios.put(`http://18.222.24.97:5000/api/login/address/${addressId}`,
+          addressInfo
         );
 
-        let addresses = await axios.get(`${process.env.REACT_APP_API_HOST}/users/${cookie.get('uni')}/addresses`)
-        let addressId = addresses.data[0].address_id;
-        addressResponse = await axios.put(
-          `${process.env.REACT_APP_API_HOST}/addresses/${addressId}`,
-          addressData
-        );
       } else {
+        // Create 
+        console.log("created");
         userResponse = await axios.post(
-          `${process.env.REACT_APP_API_HOST}/users`,
-          userData
-        );
-        addressResponse = await axios.post(
-          `${process.env.REACT_APP_API_HOST}/addresses`,
-          addressData
+          `http://18.222.24.97:5000/api/login/users/new`,
+          userInfo
         );
       }
-
-      history.push('/user/profile');
     } catch (err) {
-      // alert("Oops, something went wrong. Please try again later.")
+      alert("Oops, something went wrong. Please try again later.")
+      console.log(err);
     }
 
-
-
-    // let response = await axios.post(
-    //   `http://ec2-18-222-102-49.us-east-2.compute.amazonaws.com:5000/api/login/users/new`
-    // );
-
-    cookie.set("user", userInput);
     e.preventDefault();
+    cookie.set("user", userInput);
     console.log("Submitted");
-    console.log(userInput);
-
-    navigator("/");
+    console.log(cookie.get("user"));
+    navigator("/profile");
   };
 
   useEffect(() => {
@@ -253,7 +250,7 @@ return (
         <Form.Control type="text" required placeholder="Enter Your Zipcode" name="zipcode" value={userInput.zipcode} onChange={changeHandler}/>
       </Form.Group>
 
-      <Button variant="primary" type="submit" class="btn btn-primary">
+      <Button variant="primary" type="submit" className="btn btn-primary">
         Submit
       </Button>
 

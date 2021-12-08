@@ -24,24 +24,23 @@ function LoginHooks({ setSignedIn }) {
     );
 
     let {email, familyName, givenName} = res.profileObj;
-    
-    cookie.set("email", email)
+    cookie.set("email", email);
     setSignedIn(true);
     // Get user 
-    let response = await axios.get(
-      `http://ec2-18-222-102-49.us-east-2.compute.amazonaws.com:5000/api/login/users?email=${email}`
-    );
+    console.log(`http://18.222.24.97:5000/api/login/users?email=${email}`);
+    console.log("request url");
+    let response = await axios.get(`http://18.222.24.97:5000/api/login/users?email=${email}`);
     console.log(response);
     const { userInfo = [] } = response;
     console.log(userInfo);
-    console.log(userInfo.length)
+    console.log(userInfo.length);
     console.log("above is userInfo");
     if (userInfo.length != 0) {
-      console.log("User exists")
-      cookie.set("user", userInfo);
+      console.log("User exists");
+      cookie.set("user", userInfo.get("data"));
       navigator('/');
     }else{
-      console.log("User not exists")
+      console.log("User not exists");
       navigator('/login');
     }
   };
