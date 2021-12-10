@@ -21,35 +21,21 @@ const Profile = () => {
 
   useEffect(() => {
     async function getProfile() {
-      // let userResponse = await axios.get(
-      //   `${process.env.REACT_APP_API_HOST}/users/${uni}`
-      // );
-      // let addressResponse = await axios.get(
-      //   `${process.env.REACT_APP_API_HOST}/users/${uni}/addresses`
-      // );
-
-      // let { email, phone_number, user_name } = userResponse.data[0];
-      // let { state, city, address, zipcode } = addressResponse.data[0];
-      // console.log(userResponse, addressResponse);
-      // setUser({
-      //   email,
-      //   phone_number,
-      //   user_name,
-      //   state,
-      //   city,
-      //   address,
-      //   zipcode
-      // });
+      let r = cookie.get("r");
+      console.log(r);
+      console.log("profile component");
+      console.log(cookie.get("user"));
       let { firstName, lastName, phone, address1, address2, zipcode, country, state, city } = cookie.get("user");
+      console.log(cookie);
       setUser({
-        phone,
-        firstName,
-        lastName,
-        state,
-        city,
-        address1,
-        address2,
-        zipcode
+        phone: phone,
+        firstName: firstName,
+        lastName: lastName,
+        state: state,
+        city: city,
+        address1: address1,
+        address2: address2,
+        zipcode: zipcode,
       });
     }
     getProfile();

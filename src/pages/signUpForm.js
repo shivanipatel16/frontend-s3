@@ -139,6 +139,8 @@ const SignUp = ({ isNew }) => {
     
     console.log(userInfo);
     console.log("Above is info");
+    cookie.set("user", userInput);
+    console.log(cookie.get("user"));
 
     try {
       let userResponse, addressResponse, userData;
@@ -148,34 +150,39 @@ const SignUp = ({ isNew }) => {
         userData = {"first_name": firstName,
                       "last_name": lastName,
                       "phone_number": phone};
-
+        let userId = cookie.get("userId");
         userResponse = await axios.put(
-          `http://18.222.24.97:5000/api/login/users?email=${email}`,
+          // `http://18.222.24.97:5000/api/login/users?email=${email}`,
+          `http://127.0.0.1:5000/api/login/users/${userId}`,
           userData
         );
-        let addressId = cookie.get("user")["address_id"];
-        addressResponse = await axios.put(`http://18.222.24.97:5000/api/login/address/${addressId}`,
+        console.log("user response done");
+        let addressId = cookie.get("addressId");
+        addressResponse = await axios.put(`http://127.0.0.1:5000/api/login/address/${addressId}`,
           addressInfo
         );
-
+        console.log("address done");
+        console.log("Finishing updating")
+        console.log(addressResponse)
       } else {
         // Create 
-        console.log("created");
         userResponse = await axios.post(
-          `http://18.222.24.97:5000/api/login/users/new`,
+          // `http://18.222.24.97:5000/api/login/users/new`,
+          `http://127.0.0.1:5000/api/login/users/new`,
           userInfo
         );
-      }
+        console.log(userResponse);
+        cookie.set("userId", userResponse.data.data[0].user_id);
+        console.log("Finished posting!");
+      };
+      console.log("Submitted");
+      console.log(cookie.get("user"));
+      navigator("/profile");
+
     } catch (err) {
       alert("Oops, something went wrong. Please try again later.")
       console.log(err);
     }
-
-    e.preventDefault();
-    cookie.set("user", userInput);
-    console.log("Submitted");
-    console.log(cookie.get("user"));
-    navigator("/profile");
   };
 
   useEffect(() => {
@@ -183,14 +190,14 @@ const SignUp = ({ isNew }) => {
     if (location.state){
       let { firstName, lastName, phone, address1, address2, zipcode, state, city } = location.state;
       setUserInput({
-        phone,
-        firstName,
-        lastName,
-        state,
-        city,
-        address1,
-        address2,
-        zipcode
+        phone: phone,
+        firstName: firstName,
+        lastName: lastName,
+        state: state,
+        city: city,
+        address1: address1,
+        address2: address2,
+        zipcode: zipcode,
       });
     
     }

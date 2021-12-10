@@ -34,29 +34,6 @@ function App() {
       <Footer/>
     </Router>
 
-    
-  // <Router>
-
-  //   <div className="App">
-        // <div>
-        // {signedIn ? (
-        //     <LogoutHooks setSignedIn={setSignedIn}/>
-
-        //   ):(
-        //       <LoginHooks setSignedIn={setSignedIn}/>
-
-        //     )}
-        // </div>
-
-  //         <Routes>
-  //          <Route exact path="/users/update" component={SignUp} />
-  //         </Routes>
-  //   </div>
-
-    
-  // </Router>
-
-
   );
 }
 
