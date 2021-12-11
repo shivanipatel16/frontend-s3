@@ -16,7 +16,6 @@ const clientId =
 function LoginHooks({ setSignedIn }) {
   let navigator = useNavigate();
   const cookie = new Cookies();
-  console.log("Login hooks");
   
   const onSuccess = async res => {
     console.log('Login Success: currentUser:', res.profileObj);
@@ -32,6 +31,7 @@ function LoginHooks({ setSignedIn }) {
     let response = await axios.get(`http://127.0.0.1:5000/api/login/users?email=${email}`);
     const userInfo = response.data;
     if (userInfo.data.length != 0) {
+      console.log("user exist");
       cookie.set("userId", userInfo.data[0].user_id);
       const firstName = userInfo.data[0].first_name;
       const lastName = userInfo.data[0].last_name;
@@ -59,7 +59,7 @@ function LoginHooks({ setSignedIn }) {
         })
       navigator('/profile');
     }else{
-      console.log("User not exists");
+      console.log("user not exist; redirect to /login");
       navigator('/login');
     }
   };

@@ -9,7 +9,6 @@ import { useNavigate } from "react-router";
 
 const Header = ({signedIn, setSignedIn}) => {
     console.log("Header");
-    console.log(signedIn);
     let navigator = useNavigate();
 
     const redirectToProfile = () => {

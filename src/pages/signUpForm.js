@@ -122,6 +122,7 @@ const SignUp = ({ isNew }) => {
   };
 
   const submitHandler = async e => {
+    console.log("submit handler");
     let { firstName, lastName, phone, address1, address2, zipcode, country, state, city } = userInput;
 
     let addressInfo = {"street_line1": address1,
@@ -137,46 +138,40 @@ const SignUp = ({ isNew }) => {
                     "phone_number": phone,
                     "address": addressInfo};
     
-    console.log(userInfo);
-    console.log("Above is info");
     cookie.set("user", userInput);
-    console.log(cookie.get("user"));
-
+    console.log(cookie);
     try {
       let userResponse, addressResponse, userData;
       // Info update
       if (location.state) {
-        console.log("update");
         userData = {"first_name": firstName,
                       "last_name": lastName,
                       "phone_number": phone};
         let userId = cookie.get("userId");
-        userResponse = await axios.put(
+
+        userResponse = axios.put(
           // `http://18.222.24.97:5000/api/login/users?email=${email}`,
           `http://127.0.0.1:5000/api/login/users/${userId}`,
           userData
         );
-        console.log("user response done");
         let addressId = cookie.get("addressId");
-        addressResponse = await axios.put(`http://127.0.0.1:5000/api/login/address/${addressId}`,
+        console.log("second request");
+        addressResponse = axios.put(`http://127.0.0.1:5000/api/login/address/${addressId}`,
           addressInfo
         );
-        console.log("address done");
-        console.log("Finishing updating")
-        console.log(addressResponse)
+        console.log("Updated");
       } else {
         // Create 
-        userResponse = await axios.post(
+        userResponse = axios.post(
           // `http://18.222.24.97:5000/api/login/users/new`,
           `http://127.0.0.1:5000/api/login/users/new`,
           userInfo
-        );
-        console.log(userResponse);
-        cookie.set("userId", userResponse.data.data[0].user_id);
-        console.log("Finished posting!");
+        ).then((response)=>{
+            cookie.set("userId", response.data.data.user_id);
+        });
+        console.log("created");
       };
-      console.log("Submitted");
-      console.log(cookie.get("user"));
+      console.log("Redirecting to /profile");
       navigator("/profile");
 
     } catch (err) {

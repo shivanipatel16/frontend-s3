@@ -21,8 +21,6 @@ const Profile = () => {
 
   useEffect(() => {
     async function getProfile() {
-      let r = cookie.get("r");
-      console.log(r);
       console.log("profile component");
       console.log(cookie.get("user"));
       let { firstName, lastName, phone, address1, address2, zipcode, country, state, city } = cookie.get("user");
