@@ -1,5 +1,6 @@
 import * as React from "react";
-import Item from "./Item";
+// import Item from "./Item";
+import {Cookies} from 'react-cookie';
 // import { DropdownWrapper, Wrapper, ActivatorButton, DropdownList } from "./Toppings.styles";
 // import {useQuery} from "react-query";
 // import {CartItemType} from "../../App";
@@ -19,6 +20,8 @@ import Item from "./Item";
 export function ToppingDropdown(props){
     const [toppings, setToppings] = React.useState([]);
     const {product} = props;
+    const cookie = new Cookies();
+    const user_id = cookie.get("user_id");
 
 
     React.useEffect(() => {
@@ -27,22 +30,24 @@ export function ToppingDropdown(props){
                 headers: {'Content-Type': 'application/json'},
             })
 
-            const data = await response.json()
-            setToppings(data.data)
+            const data = await response.json();
+            setToppings(data.data);
             })()
-        });
+        },[user_id]);
     // console.log(product.price);
+
+
     const handleChange = (e) => {
         product.topping_id = e.target.value;
         //add topping price
         var price = product.price;
         product.price = parseFloat(price) + 0.5;
     };
-    // console.log(product.price);
+
 
     return (
         <select onChange={handleChange}>
-            {/* <option value="" key=""> Add Toppings</option> */}
+            <option value="" key=""> Add Toppings</option>
             {toppings.map(toppings => (
                 
                 <option
@@ -68,6 +73,7 @@ export function SizeDropdown(props){
 
     return (
         <select onChange={handleChange}>
+            <option value="" key=""> Choose Size</option>
             <option value={product.price_m}>Medium (${product.price_m})</option>    
             <option value={product.price_l}>Large (${product.price_l})</option>
         </select>
@@ -83,6 +89,7 @@ export function IceDropdown(props){
 
     return (
         <select id='iceLevel' onChange={handleChange}>
+            <option value="" key="">Choose Ice Level</option>
             <option value="Normal Ice"> Normal Ice </option>
             <option value="No Ice">No Ice </option>    
             <option value="Less Ice">Less Ice </option>

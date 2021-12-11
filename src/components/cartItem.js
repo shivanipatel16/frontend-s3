@@ -8,22 +8,25 @@ import React from "react";
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  font-family: Arial, Helvetica, sans-serif;
-  border-bottom: 1px solid lightblue;
-  padding-bottom: 20px;
-  div {
+
+    justify-content: space-between;
+    font-family: Arial, Helvetica, sans-serif;
+    border-bottom: 1px solid lightblue;
+    padding-bottom: 20px;
+    div {
     flex: 1;
-  }
-  .information,
-  .buttons {
+    }
+    .information,
+    .buttons {
     display: flex;
     justify-content: space-between;
     maxWidth: '30px';
-     maxHeight: '30px';
-      minWidth: '30px';
-      minHeight: '30px';
+    maxHeight: '30px';
+        minWidth: '30px';
+        minHeight: '30px';
+    }
+    h6 {
+      padding: 20px;
   }
 `;
 
@@ -37,9 +40,6 @@ export default function CartItem(props){
         <Wrapper>
             <h4>{item.product_name}</h4>
             <div className='information'>
-                {/* <p>Size: ${item.size}</p> */}
-                {/* <p>Price: ${item.price}</p>
-                <p>{item.topping_id}</p> */}
                 <p>Price: ${(item.amount * (item.price)).toFixed(2)}</p>
             </div>
             <div className='buttons'>

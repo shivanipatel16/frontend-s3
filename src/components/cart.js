@@ -7,9 +7,9 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 
 const Wrapper = styled.aside`
-  font-family: Arial, Helvetica, sans-serif;
   width: 800px;
   padding: 20px;
+
 `;
 
 // type Props = {
@@ -25,7 +25,7 @@ export default function Cart(props){
         items.reduce((ack, item) => ack + item.amount * item.price , 0);
     
     const userId = 30;
-    const  handleSubmit = (e) => {
+    const handleSubmit = (e) => {
         // product.topping_id = e.target.topping_id;
         // const topping_price = toppings.find(x=> x.topping_id === e.target.topping_id).price;
         // console.log(toppings.find(x=> x.topping_id === e.target.topping_id));
@@ -46,21 +46,23 @@ export default function Cart(props){
         //         })()
         //     },[]);
         // e.preventDefault();
-        const now = new Date().toLocaleString()
+        const now = new Date().toLocaleString();
+        const total_price =  Math.round((calculateTotal(cartItems) + Number.EPSILON) * 100) / 100;
         const order = {
-            total_price: calculateTotal(cartItems).toFixed(2),
+            total_price: total_price,
             datetime: now,
             order: cartItems
         }
         console.log(order);
-        axios.post(`http://172.20.10.6:5000/api/orders/${userId}`,{order}).then(res=>{
-            console.log(res.data);
-        })
+        // axios.post(`http://172.20.10.6:5000/api/orders/${userId}`,{order}).then(res=>{
+        //     console.log(res.data);
+        // })
+        alert(`Order Placed. Total Price: ${total_price}`);
     };
 
     return (
         <Wrapper>
-            <h4>Your Shopping Cart</h4>
+            <h3>Your Shopping Cart</h3>
             {cartItems.length === 0 ? <p>No items in cart.</p> : null}
             {cartItems.map(item => (
                 <CartItem
@@ -70,12 +72,9 @@ export default function Cart(props){
                     removeFromCart={removeFromCart}
                 />
             ))}
-            <h4>Total: ${calculateTotal(cartItems).toFixed(2)}</h4>
-            {/* <form>
-                <input type="submit" value="Submit" />
-            </form> */}
-            <Button onclick={handleSubmit()}>
-                Submit My Order
+            <h4>Total Price: ${calculateTotal(cartItems).toFixed(2)}</h4>
+            <Button className='button' onClick={handleSubmit}>
+                CheckOut
             </Button>
         </Wrapper>
     );

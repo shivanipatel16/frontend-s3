@@ -15,6 +15,7 @@ import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 // import Header from './components/Header'
 import styled from 'styled-components';
+import {Cookies} from 'react-cookie';
 const Wrapper = styled.div`
   margin: 40px;
 `;
@@ -27,8 +28,9 @@ const StyledButton = styled(IconButton) `
   padding-top: 60px;
 `
 
-function OrderMenu(props) {
-  const { user } = props;
+function OrderMenu() {
+  const cookie = new Cookies();
+  const user_id = cookie.get("user_id");
   const[cartOpen, setCartOpen] = useState(false);
   // const CartItemType = {product_id, product_name, price_m, price_l, price, amount, size};
   const[cartItems, setCartItems] = useState([]);
@@ -40,15 +42,9 @@ function OrderMenu(props) {
               headers: {'Content-Type': 'application/json'},
           })
           const data = await response.json()
-          setMenuItems(data.data)
+          setMenuItems(data.data);
           })()
-      },[]);
-    // useEffect(() => {
-    //       fetch('http://172.20.10.6:5000/api/menu/product',{
-    //           headers: {'Content-Type': 'application/json'},
-    //       }).then(response=> response.json())
-    //       .then(data => setMenuItems(data.data));
-    //       },[]);
+      },[user_id]);
 
 
 
