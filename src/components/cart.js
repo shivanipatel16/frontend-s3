@@ -1,0 +1,84 @@
+
+import CartItem from './cartItem';
+// import './cart.css'
+import Button from '@material-ui/core/Button';
+import styled from 'styled-components';
+import {useState, useEffect} from 'react';
+import axios from 'axios';
+
+const Wrapper = styled.aside`
+  font-family: Arial, Helvetica, sans-serif;
+  width: 800px;
+  padding: 20px;
+`;
+
+// type Props = {
+//     cartItems: CartItemType[];
+//     addToCart: (clickedItem: CartItemType) => void;
+//     removeFromCart: (id: number) => void;
+// };
+
+export default function Cart(props){
+    const { cartItems, addToCart, removeFromCart } = props;
+    const [postId, setPostID] = useState();
+    const calculateTotal = (items) =>
+        items.reduce((ack, item) => ack + item.amount * item.price , 0);
+    
+    const userId = 30;
+    const  handleSubmit = (e) => {
+        // product.topping_id = e.target.topping_id;
+        // const topping_price = toppings.find(x=> x.topping_id === e.target.topping_id).price;
+        // console.log(toppings.find(x=> x.topping_id === e.target.topping_id));
+        console.log(e);
+        // product.price = e.target.value;
+        // useEffect(() => {
+        //     (async () => {
+        //         const requestOptions = {
+        //             method: 'POST',
+        //             headers: {'Content-Type': 'application/json'},
+        //             body: JSON.stringify({
+
+        //             })
+        //         }
+        //         const response = await fetch(`http://172.20.10.6:5000/api/orders/${userId}`,requestOptions)
+        //         const data = await response.json()
+        //         setPostID(data.id)
+        //         })()
+        //     },[]);
+        // e.preventDefault();
+        const now = new Date().toLocaleString()
+        const order = {
+            total_price: calculateTotal(cartItems).toFixed(2),
+            datetime: now,
+            order: cartItems
+        }
+        console.log(order);
+        axios.post(`http://172.20.10.6:5000/api/orders/${userId}`,{order}).then(res=>{
+            console.log(res.data);
+        })
+    };
+
+    return (
+        <Wrapper>
+            <h4>Your Shopping Cart</h4>
+            {cartItems.length === 0 ? <p>No items in cart.</p> : null}
+            {cartItems.map(item => (
+                <CartItem
+                    key={item.product_id}
+                    item={item}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                />
+            ))}
+            <h4>Total: ${calculateTotal(cartItems).toFixed(2)}</h4>
+            {/* <form>
+                <input type="submit" value="Submit" />
+            </form> */}
+            <Button onclick={handleSubmit()}>
+                Submit My Order
+            </Button>
+        </Wrapper>
+    );
+};
+
+// export default Cart;

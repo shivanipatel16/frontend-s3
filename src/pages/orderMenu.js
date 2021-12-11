@@ -1,48 +1,54 @@
 import React from 'react';
 // import logo from './logo.svg';
 // import './App.css';
-import {useState} from 'react'
+import {useState, useEffect} from 'react';
 // import {useQuery} from 'react-query'
 // import Item from "./components/Item/Item"
+import Item from '../components/Item';
+import Cart from '../components/cart';
 // import Cart from "./components/Cart/Cart"
-import Drawer from '@material-ui/core/Drawer'
+import Drawer from '@material-ui/core/Drawer';
 // import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import Badge from '@material-ui/core/Badge'
 import IconButton from '@material-ui/core/IconButton'
 // import Header from './components/Header'
+import styled from 'styled-components';
+const Wrapper = styled.div`
+  margin: 40px;
+`;
 
+const StyledButton = styled(IconButton) `
+  position: fixed;
+  z-index: 100;
+  right: 20px;
+  top: 20px;
+  padding-top: 60px;
+`
 
-//styles
-// import {Wrapper, StyledButton} from './OrderMenu.styles';
-//Types
-// export type CartItemType = {
-//   product_id: number;
-//   product_name: string;
-//   price_m: number;
-//   price_l: number;
-//   price: number;
-//   amount: number;
-// }
-
-
-function OrderMenu() {
+function OrderMenu(props) {
+  const { user } = props;
   const[cartOpen, setCartOpen] = useState(false);
   // const CartItemType = {product_id, product_name, price_m, price_l, price, amount, size};
   const[cartItems, setCartItems] = useState([]);
   const[menuItems, setMenuItems] = useState([]);
 
-  React.useEffect(() => {
-      ;(async () => {
+  useEffect(() => {
+      (async () => {
           const response = await fetch('http://172.20.10.6:5000/api/menu/product',{
               headers: {'Content-Type': 'application/json'},
           })
           const data = await response.json()
           setMenuItems(data.data)
-          console.log(menuItems) 
           })()
-      });
+      },[]);
+    // useEffect(() => {
+    //       fetch('http://172.20.10.6:5000/api/menu/product',{
+    //           headers: {'Content-Type': 'application/json'},
+    //       }).then(response=> response.json())
+    //       .then(data => setMenuItems(data.data));
+    //       },[]);
 
 
 
@@ -64,6 +70,7 @@ function OrderMenu() {
       // First time the item is added
       return [...prev, { ...clickedItem, amount: 1 }];
     });
+
   };
 
   const handleRemoveFromCart = (product_id) => {
@@ -75,30 +82,29 @@ function OrderMenu() {
           } else {
             return [...ack, item];
           }
-        })
+        },[])
     );
   };
 
   return (
-    <div> 
-        <h1>yes</h1>
+    <Wrapper> 
       <Drawer anchor='right' open={cartOpen} onClose={()=> setCartOpen(false)}>
-        {/* <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart}/> */}
+        <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart}/>
       </Drawer>
-      <IconButton onClick={() => setCartOpen(true)}>
+      <StyledButton className="iconButton" onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>
           <AddShoppingCartIcon />
-        </Badge>
+        </Badge> 
 
-      </IconButton>
+      </StyledButton>
       <Grid container spacing={3}>
         {menuItems.map(item => (
             <Grid item key = {item.product_id} xs={12} sm={4}>
-              {/* <Item item={item} handleAddToCart ={handleAddToCart} /> */}
+              <Item item={item} handleAddToCart ={handleAddToCart} />
             </Grid>
         ))}
       </Grid>
-    </div>
+    </Wrapper>
   );
 }
 

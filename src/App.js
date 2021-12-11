@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import LoginHooks from './components/loginHooks';
 import LogoutHooks from './components/logoutHooks';
-import SignUp from './pages/signUpForm'
+import SignUp from './pages/signUpForm';
+import OrderMenu from "./pages/orderMenu";
 import Home from "./pages/home";
 import { BrowserRouter as Router,
          Routes,
@@ -27,7 +28,7 @@ function App() {
               <Route path ='/login' element={<SignUp/>} />
               <Route path ='/profile' element={<Profile/>} />
               <Route path ='/logout' element={<LogoutHooks/>} />
-              <Route path ='/orders' element={<Home/>} />
+              <Route path ='/orders' element={<OrderMenu/>} />
             </Routes>
           </div>
         </main>
