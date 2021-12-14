@@ -128,7 +128,7 @@ const SignUp = ({ isNew }) => {
     let addressInfo = {"street_line1": address1,
                       "street_line2": address2,
                       "city": city,
-                      "State": state,
+                      "state": state,
                       "country": country,
                       "zipcode": zipcode};
 
@@ -150,24 +150,32 @@ const SignUp = ({ isNew }) => {
         let userId = cookie.get("userId");
 
         userResponse = axios.put(
-          // `http://18.222.24.97:5000/api/login/users?email=${email}`,
-          `http://127.0.0.1:5000/api/login/users/${userId}`,
+          `https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/users/${userId}`,
           userData
         );
         let addressId = cookie.get("addressId");
         console.log("second request");
-        addressResponse = axios.put(`http://127.0.0.1:5000/api/login/address/${addressId}`,
+        addressResponse = axios.put(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/address/${addressId}`,
           addressInfo
-        );
-        console.log("Updated");
+        ).then((response) => {
+          console.log("Updated");          
+        }).catch((error) => {
+          alert(error);
+        });
+        navigator("/profile");
       } else {
         // Create 
         userResponse = axios.post(
-          // `http://18.222.24.97:5000/api/login/users/new`,
-          `http://127.0.0.1:5000/api/login/users/new`,
+          `https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/users/new`,
           userInfo
         ).then((response)=>{
             cookie.set("userId", response.data.data.user_id);
+            cookie.set("addressId", response.data.data.address_id);
+        }).catch((error) => {
+            alert(error.response.data);
+            if (error.response.status == 400){
+              navigator("/login");
+            };
         });
         console.log("created");
       };
@@ -175,7 +183,7 @@ const SignUp = ({ isNew }) => {
       navigator("/profile");
 
     } catch (err) {
-      alert("Oops, something went wrong. Please try again later.")
+      alert("Oops, something went wrong. Please try again later.");
       console.log(err);
     }
   };
@@ -194,7 +202,6 @@ const SignUp = ({ isNew }) => {
         address2: address2,
         zipcode: zipcode,
       });
-    
     }
 
   }, []);
