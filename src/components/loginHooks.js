@@ -27,8 +27,7 @@ function LoginHooks({ setSignedIn }) {
     cookie.set("email", email);
     setSignedIn(true);
     // Get user 
-    // let response = await axios.get(`http://18.222.24.97:5000/api/login/users?email=${email}`);
-    let response = await axios.get(`http://127.0.0.1:5000/api/login/users?email=${email}`);
+    let response = await axios.get(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/users?email=${email}`);
     const userInfo = response.data;
     if (userInfo.data.length != 0) {
       console.log("user exist");
@@ -39,7 +38,7 @@ function LoginHooks({ setSignedIn }) {
       // Get address info
       const addressId = userInfo.data[0].address_id;
       cookie.set("addressId", addressId);
-      let response = await axios.get(`http://127.0.0.1:5000/api/login/address/${addressId}`);
+      let response = await axios.get(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/address/${addressId}`);
       const addressInfo = response.data.data;
       const address1 = addressInfo[0].street_line1;
       const address2 = addressInfo[0].street_line2;
