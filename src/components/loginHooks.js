@@ -8,6 +8,7 @@ import GoogleIcon from "../assets/google.svg"
 import SignUp from "../pages/signUpForm";
 // refresh token
 import { refreshTokenSetup } from "../utils/refreshToken";
+import { ControlCameraOutlined } from "@material-ui/icons";
 
 const clientId =
   "1029189840786-4j07jl0eal7jusjrp4oaoic49ok9ujil.apps.googleusercontent.com";
@@ -15,7 +16,6 @@ const clientId =
 function LoginHooks({ setSignedIn }) {
   let navigator = useNavigate();
   const cookie = new Cookies();
-  console.log("Login hooks");
   
   const onSuccess = async res => {
     console.log('Login Success: currentUser:', res.profileObj);
@@ -23,30 +23,48 @@ function LoginHooks({ setSignedIn }) {
       `Logged in successfully! Welcome ${res.profileObj.givenName}`
     );
 
-    let {email, familyName, givenName} = res.profileObj;
+    let { email } = res.profileObj;
     cookie.set("email", email);
     setSignedIn(true);
     // Get user 
-    console.log(`http://18.222.24.97:5000/api/login/users?email=${email}`);
-    console.log("request url");
-    let response = await axios.get(`http://18.222.24.97:5000/api/login/users?email=${email}`);
-    console.log(response);
-    const { userInfo = [] } = response;
-    console.log(userInfo);
-    console.log(userInfo.length);
-    console.log("above is userInfo");
-    if (userInfo.length != 0) {
-      console.log("User exists");
-      cookie.set("user", userInfo.get("data"));
-      navigator('/');
+    // let response = await axios.get(`http://18.222.24.97:5000/api/login/users?email=${email}`);
+    let response = await axios.get(`http://127.0.0.1:5000/api/login/users?email=${email}`);
+    const userInfo = response.data;
+    if (userInfo.data.length != 0) {
+      console.log("user exist");
+      cookie.set("userId", userInfo.data[0].user_id);
+      const firstName = userInfo.data[0].first_name;
+      const lastName = userInfo.data[0].last_name;
+      const phone = userInfo.data[0].phone_number;
+      // Get address info
+      const addressId = userInfo.data[0].address_id;
+      cookie.set("addressId", addressId);
+      let response = await axios.get(`http://127.0.0.1:5000/api/login/address/${addressId}`);
+      const addressInfo = response.data.data;
+      const address1 = addressInfo[0].street_line1;
+      const address2 = addressInfo[0].street_line2;
+      const city = addressInfo[0].city;
+      const state = addressInfo[0].state;
+      const zipcode = addressInfo[0].zipcode;
+      cookie.set("user", {
+                "phone": phone,
+                "firstName": firstName,
+                "lastName": lastName,
+                "state": state,
+                "city": city,
+                "Country": "United States",
+                "address1": address1,
+                "address2": address2,
+                "zipcode": zipcode,
+        })
+      navigator('/profile');
     }else{
-      console.log("User not exists");
+      console.log("user not exist; redirect to /login");
       navigator('/login');
     }
   };
 
   const onFailure = res => {
-    console.log("on fail");
     console.log("Login failed: res:", res);
     alert(`Failed to login. `);
   };
