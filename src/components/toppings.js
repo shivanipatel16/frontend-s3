@@ -1,20 +1,6 @@
 import * as React from "react";
 import Item from "./Item";
 import {Cookies} from 'react-cookie';
-// import { DropdownWrapper, Wrapper, ActivatorButton, DropdownList } from "./Toppings.styles";
-// import {useQuery} from "react-query";
-// import {CartItemType} from "../../App";
-// import Grid from "@material-ui/core/Grid";
-// import Item from "../Item/Item";
-// import CartItem from "../CartItem/CartItem";
-// import { replaceEqualDeep } from "react-query/types/core/utils";
-// import Select from 'react';
-
-// interface Topping {
-//     topping_id: number;
-//     topping_name: string;
-//     price: number;
-// }
 
 
 export function ToppingDropdown(props){
@@ -38,10 +24,16 @@ export function ToppingDropdown(props){
 
 
     const handleChange = (e) => {
-        product.topping_id = e.target.value;
+        product.topping_id = parseInt(e.target.value);
         //add topping price
+        var topping = toppings.find(topping => topping.topping_id === parseInt(e.target.value));
+        if (topping){
+            var topping_price = topping.price;
+        }else{
+            var topping_price = 0;
+        }
         var price = product.price;
-        product.price = parseFloat(price) + 0.5;
+        product.price = parseFloat(price) + parseFloat(topping_price);
     };
 
 
@@ -80,6 +72,7 @@ export function SizeDropdown(props){
     );
 }
 
+
 export function IceDropdown(props){
     const {product} = props;
 
@@ -94,6 +87,27 @@ export function IceDropdown(props){
             <option value="No Ice">No Ice </option>    
             <option value="Less Ice">Less Ice </option>
             <option value="Hot"> Hot </option>
+        </select>
+    );
+    
+}
+
+
+export function SugarDropdown(props){
+    const {product} = props;
+
+    const handleChange = (e) => {
+        product.sugarLevel = e.target.value;
+    };
+
+    return (
+        <select id='sugar-level' onChange={handleChange}>
+            <option value="" key="">Choose Sugar Level</option>
+            <option value="100%"> 100% </option>
+            <option value="70%"> 70% </option>    
+            <option value="50%"> 50% </option>
+            <option value="30%"> 30% </option>
+            <option value="0%"> 0% </option>
         </select>
     );
     

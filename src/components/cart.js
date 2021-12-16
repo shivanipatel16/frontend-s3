@@ -20,67 +20,46 @@ const Wrapper = styled.aside`
 // };
 
 export default function Cart(props){
-    const { cartItems, addToCart, removeFromCart } = props;
+    const { cartItems, addToCart, removeFromCart, confirmItem } = props;
     let cookies = new Cookies();
     let userID = cookies.get("userId");
-    console.log(userID);
-    const [postId, setPostID] = useState();
     const calculateTotal = (items) =>
         items.reduce((ack, item) => ack + item.amount * item.price , 0);
     
     // const userId = 30;
     const handleSubmit = (e) => {
-        // product.topping_id = e.target.topping_id;
-        // const topping_price = toppings.find(x=> x.topping_id === e.target.topping_id).price;
-        // console.log(toppings.find(x=> x.topping_id === e.target.topping_id));
-        console.log(e);
-        // product.price = e.target.value;
-        // useEffect(() => {
-        //     (async () => {
-        //         const requestOptions = {
-        //             method: 'POST',
-        //             headers: {'Content-Type': 'application/json'},
-        //             body: JSON.stringify({
-
-        //             })
-        //         }
-        //         const response = await fetch(`http://172.20.10.6:5000/api/orders/${userId}`,requestOptions)
-        //         const data = await response.json()
-        //         setPostID(data.id)
-        //         })()
-        //     },[]);
-        // e.preventDefault();
-        const now = new Date().toLocaleString();
-        const total_price =  Math.round((calculateTotal(cartItems) + Number.EPSILON) * 100) / 100;
-        // const order = {
-        //     total_price: total_price,
-        //     datetime: now,
-        //     order: cartItems
-        // }
-        // console.log(order);
-        let orderInfo = cartItems.map(item=>({
-            "product_id": item.product_id,
-            "quantity": item.amount,
-            "topping_id": parseInt(item.topping_id),
-            "ice_level": item.iceLevel,
-            "price": item.price
-        }));
-
-        console.log(orderInfo);
-        let order = {"total_price": total_price,
-                "datetime": now,
-                "order": orderInfo};
-
-        // let input = JSON.stringify(orderInfo);
-        // console.log(input);
-        axios.post(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/orders/${userID}`, order ).then(res=>{
-            console.log(res);
-        }).catch((error) => {
-            alert(error.response.data);
-            // if (error.response.status == 400){
-            // };
+        // check if all the items are confirmed
+        let ready = cartItems.every(function (e) {
+            return e.isConfirmed;
         });
-        alert(`Order Placed. Total Price: ${total_price}`);
+
+        if (ready){
+            const now = new Date().toLocaleString();
+            const total_price =  Math.round((calculateTotal(cartItems) + Number.EPSILON) * 100) / 100;
+            let orderInfo = cartItems.map(item=>({
+                "product_id": item.product_id,
+                "quantity": item.amount,
+                "topping_id": parseInt(item.topping_id),
+                "ice_level": item.iceLevel,
+                "price": item.price
+            }));
+
+            console.log(orderInfo);
+            let order = {"total_price": total_price,
+                    "datetime": now,
+                    "order": orderInfo};
+
+
+            axios.post(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/orders/${userID}`, order ).then(res=>{
+                console.log(res);
+            }).catch((error) => {
+                alert(error.response.data);
+            });
+            alert(`Order Placed. Total Price: ${total_price}`);
+        }
+        else{
+            alert('Please confirm all your items.');
+        }
     };
 
     return (
@@ -94,6 +73,7 @@ export default function Cart(props){
                     item={item}
                     addToCart={addToCart}
                     removeFromCart={removeFromCart}
+                    confirmItem={confirmItem}
                 />
             ))}
             <h4>Total Price: ${calculateTotal(cartItems).toFixed(2)}</h4>

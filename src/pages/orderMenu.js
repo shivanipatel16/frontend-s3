@@ -47,7 +47,6 @@ function OrderMenu() {
       },[user_id]);
 
 
-
   const getTotalItems = (items) => items.reduce((ack, item) => ack + item.amount, 0);
 
 
@@ -81,11 +80,29 @@ function OrderMenu() {
         },[])
     );
   };
+  
+  const confirmItem = (clickedItem) => {
+    setCartItems(prev => {
+      const isCompleted = clickedItem.iceLevel || clickedItem.price || clickedItem.topping_id
+      if (isCompleted) {
+        return prev.map(item =>
+            item.product_id === clickedItem.product_id
+                ? { ...item, iceLevel: clickedItem.iceLevel, price:clickedItem.price, topping_id:clickedItem.topping_id, isConfirmed:true}
+                : item
+        );
+      }
+      else{
+        alert("Please fill in all the requered options");
+        return prev;
+      }
+
+    });
+  };
 
   return (
     <Wrapper> 
       <Drawer anchor='right' open={cartOpen} onClose={()=> setCartOpen(false)}>
-        <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart}/>
+        <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart} confirmItem={confirmItem}/>
       </Drawer>
       <StyledButton className="iconButton" onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>

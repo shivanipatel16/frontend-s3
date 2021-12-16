@@ -1,9 +1,5 @@
 import Button from '@material-ui/core/Button';
-// Types
-// import { CartItemType } from '../../App';
-// Styles
-// import { Wrapper } from './CartItem.styles';
-import { ToppingDropdown, SizeDropdown, IceDropdown } from './toppings';
+import { ToppingDropdown, SizeDropdown, IceDropdown,SugarDropdown } from './toppings';
 import React from "react";
 import styled from 'styled-components';
 
@@ -32,7 +28,7 @@ const Wrapper = styled.div`
 
 
 export default function CartItem(props){
-    const { item, addToCart, removeFromCart } = props;
+    const { item, addToCart, removeFromCart, confirmItem} = props;
     // const [iceLevel, setIceLevel] = useState();
     
 
@@ -60,9 +56,18 @@ export default function CartItem(props){
                 >
                     +
                 </Button>
-                <IceDropdown product={item}/>
                 <SizeDropdown product={item}/>
+                <IceDropdown product={item}/>
+                {/* <SugarDropdown product={item} /> */}
                 <ToppingDropdown product={item} />
+                <Button
+                    size='small'
+                    disableElevation
+                    variant='contained'
+                    onClick={() => confirmItem(item)}
+                >
+                    ✓
+                </Button>
             </div>
         </Wrapper>
 );}
