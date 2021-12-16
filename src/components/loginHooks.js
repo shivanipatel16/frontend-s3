@@ -22,7 +22,6 @@ function LoginHooks({ setSignedIn }) {
     alert(
       `Logged in successfully! Welcome ${res.profileObj.givenName}`
     );
-
     let { email } = res.profileObj;
     cookie.set("email", email);
     setSignedIn(true);
