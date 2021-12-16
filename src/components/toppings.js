@@ -1,5 +1,5 @@
 import * as React from "react";
-// import Item from "./Item";
+import Item from "./Item";
 import {Cookies} from 'react-cookie';
 // import { DropdownWrapper, Wrapper, ActivatorButton, DropdownList } from "./Toppings.styles";
 // import {useQuery} from "react-query";
@@ -26,7 +26,7 @@ export function ToppingDropdown(props){
 
     React.useEffect(() => {
         ;(async () => {
-            const response = await fetch('http://172.20.10.6:5000/api/menu/topping',{
+            const response = await fetch('http://192.168.0.247:5000/api/menu/topping',{
                 headers: {'Content-Type': 'application/json'},
             })
 
