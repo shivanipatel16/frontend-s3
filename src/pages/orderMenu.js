@@ -38,7 +38,7 @@ function OrderMenu() {
 
   useEffect(() => {
       (async () => {
-          const response = await fetch('http://192.168.0.247:5000/api/menu/product',{
+          const response = await fetch('https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/menu/product',{
               headers: {'Content-Type': 'application/json'},
           })
           const data = await response.json()

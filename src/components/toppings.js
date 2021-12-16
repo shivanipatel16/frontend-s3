@@ -26,7 +26,7 @@ export function ToppingDropdown(props){
 
     React.useEffect(() => {
         ;(async () => {
-            const response = await fetch('http://192.168.0.247:5000/api/menu/topping',{
+            const response = await fetch('https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/menu/topping',{
                 headers: {'Content-Type': 'application/json'},
             })
 

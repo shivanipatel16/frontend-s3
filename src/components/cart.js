@@ -73,7 +73,7 @@ export default function Cart(props){
 
         // let input = JSON.stringify(orderInfo);
         // console.log(input);
-        axios.post(`http://192.168.0.247:5000/api/orders/${userID}`, order ).then(res=>{
+        axios.post(`https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/orders/${userID}`, order ).then(res=>{
             console.log(res);
         }).catch((error) => {
             alert(error.response.data);
