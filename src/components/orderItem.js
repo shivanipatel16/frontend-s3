@@ -58,7 +58,7 @@ export default function OrderItem(props){
     return (
       <Wrapper>
         <h5>Order ID: {item.order_id}</h5>
-        <p>Oder Time: {item.datetime}</p>
+        <p>Order Time: {item.datetime}</p>
         <p>Total Price: {item.total_price}</p>
         <div>
             {item.order.map(orderItem => (
