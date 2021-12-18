@@ -160,7 +160,10 @@ const SignUp = ({ isNew }) => {
         ).then((response) => {
           console.log("Updated");          
         }).catch((error) => {
+          console.log(error);
+          console.log("error");
           alert(error);
+          navigator("/");
         });
         navigator("/profile");
       } else {
@@ -169,8 +172,9 @@ const SignUp = ({ isNew }) => {
           `https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/users/new`,
           userInfo
         ).then((response)=>{
+            console.log(response);
+            console.log("got user ID");
             cookie.set("userId", response.data.data.user_id);
-            cookie.set("addressId", response.data.data.address_id);
         }).catch((error) => {
             alert(error.response.data);
             if (error.response.status == 400){
@@ -178,6 +182,18 @@ const SignUp = ({ isNew }) => {
             };
         });
         console.log("created");
+
+        // Get address ID
+        addressResponse = axios.get(
+          `https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/login/users/${cookie.get("userId")}`,
+        ).then((response)=>{
+            console.log("getting address ID");
+            console.log(response);
+            cookie.set("addressId", response.data.data.address_id);
+        }).catch((error) => {
+            alert(error.response.data);
+        });
+
       };
       console.log("Redirecting to /profile");
       navigator("/profile");
