@@ -6,6 +6,7 @@ import {useState, useEffect} from 'react';
 // import Item from "./components/Item/Item"
 import Item from '../components/Item';
 import Cart from '../components/cart';
+import PastOrder from '../components/pastOrder';
 // import Cart from "./components/Cart/Cart"
 import Drawer from '@material-ui/core/Drawer';
 // import LinearProgress from "@material-ui/core/LinearProgress";
@@ -103,6 +104,9 @@ function OrderMenu() {
     <Wrapper> 
       <Drawer anchor='right' open={cartOpen} onClose={()=> setCartOpen(false)}>
         <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart} confirmItem={confirmItem}/>
+      </Drawer>
+      <Drawer anchor='right' open={!cartOpen}>
+        <PastOrder />
       </Drawer>
       <StyledButton className="iconButton" onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>
