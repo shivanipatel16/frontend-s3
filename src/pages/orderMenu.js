@@ -13,8 +13,8 @@ import Drawer from '@material-ui/core/Drawer';
 import Grid from "@material-ui/core/Grid";
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart'
 import Badge from '@material-ui/core/Badge'
-import IconButton from '@material-ui/core/IconButton'
-// import Header from './components/Header'
+import IconButton from '@material-ui/core/IconButton';
+import HistoryIcon from '@material-ui/icons/History';
 import styled from 'styled-components';
 import {Cookies} from 'react-cookie';
 const Wrapper = styled.div`
@@ -25,17 +25,17 @@ const StyledButton = styled(IconButton) `
   position: fixed;
   z-index: 100;
   right: 20px;
-  top: 20px;
-  padding-top: 60px;
 `
 
 function OrderMenu() {
   const cookie = new Cookies();
   const user_id = cookie.get("user_id");
   const[cartOpen, setCartOpen] = useState(false);
+  const[pastOrderOpen, setPastOrderOpen] = useState(false);
   // const CartItemType = {product_id, product_name, price_m, price_l, price, amount, size};
   const[cartItems, setCartItems] = useState([]);
   const[menuItems, setMenuItems] = useState([]);
+  const [toppingList, setToppingList] = useState([]);
 
   useEffect(() => {
       (async () => {
@@ -47,6 +47,16 @@ function OrderMenu() {
           })()
       },[user_id]);
 
+  useEffect(() => {
+      (async () => {
+          const response = await fetch('https://kbjdvhv2je.execute-api.us-east-2.amazonaws.com/dev/menu/topping',{
+              headers: {'Content-Type': 'application/json'},
+          })
+          const data = await response.json()
+          setToppingList(data.data);
+          })()
+      },[user_id]);
+  
 
   const getTotalItems = (items) => items.reduce((ack, item) => ack + item.amount, 0);
 
@@ -100,20 +110,27 @@ function OrderMenu() {
     });
   };
 
+
   return (
     <Wrapper> 
       <Drawer anchor='right' open={cartOpen} onClose={()=> setCartOpen(false)}>
         <Cart cartItems = {cartItems} addToCart={handleAddToCart} removeFromCart={handleRemoveFromCart} confirmItem={confirmItem}/>
       </Drawer>
-      <Drawer anchor='right' open={!cartOpen}>
-        <PastOrder />
+
+      <Drawer anchor='right' open={pastOrderOpen} onClose={()=> setPastOrderOpen(false)}>
+        <PastOrder products = {menuItems} toppings = {toppingList}/>
       </Drawer>
+
       <StyledButton className="iconButton" onClick={() => setCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color='error'>
           <AddShoppingCartIcon />
         </Badge> 
-
       </StyledButton>
+
+      <StyledButton className="iconButton" onClick={() => setPastOrderOpen(true)}>
+        <HistoryIcon />
+      </StyledButton>
+    
       <Grid container spacing={3}>
         {menuItems.map(item => (
             <Grid item key = {item.product_id} xs={12} sm={4}>

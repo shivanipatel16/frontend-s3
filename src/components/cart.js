@@ -44,7 +44,6 @@ export default function Cart(props){
                 "price": item.price
             }));
 
-            console.log(orderInfo);
             let order = {"total_price": total_price,
                     "datetime": now,
                     "order": orderInfo};

@@ -13,11 +13,10 @@ const Wrapper = styled.aside`
 `;
 
 export default function PastOrder(props){
+    const {products, toppings } = props;
     let cookies = new Cookies();
     let user_id = cookies.get("userId");
     const[orderItems, setOrderItems] = useState([]);
-
-    
 
     useEffect(() => {
         (async () => {
@@ -29,7 +28,6 @@ export default function PastOrder(props){
             })()
         },[user_id]);
     
-    console.log(orderItems);
 
     return (
         <Wrapper>
@@ -39,6 +37,9 @@ export default function PastOrder(props){
                 <OrderItem
                     key={item.order_id}
                     item={item}
+                    products = {products}
+                    toppings = {toppings}
+
                 />
             ))}
             {/* <h4>Total Price: ${calculateTotal(cartItems).toFixed(2)}</h4> */}
